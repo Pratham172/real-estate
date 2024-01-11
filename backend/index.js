@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 
 const app = express();
 
+// seting up server in port 7000
 app.listen(7000, ()=> {
     console.log("server is running on port 7000!!");
 });
 
+// connection to mongo database
 const mongoUrl = "mongodb://127.0.0.1/real_estate"
 mongoose.connect(mongoUrl)
 .then(()=> {
