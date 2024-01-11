@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import UserRouter from './routes/user.route.js';
 
 const app = express();
 
@@ -18,3 +19,6 @@ mongoose.connect(mongoUrl)
 .catch((err) => {
     console.log(err);
 });
+
+
+app.use("/api/user",UserRouter);
