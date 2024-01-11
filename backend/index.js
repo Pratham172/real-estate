@@ -1,8 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import UserRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
 
 const app = express();
+app.use(express.json());
 
 // seting up server in port 7000
 app.listen(7000, ()=> {
@@ -13,7 +15,7 @@ app.listen(7000, ()=> {
 const mongoUrl = "mongodb://127.0.0.1/real_estate"
 mongoose.connect(mongoUrl)
 .then(()=> {
-    console.log("-----------------")
+    console.log("--------------------")
     console.log("Connected to MongoDB")
 })
 .catch((err) => {
@@ -21,4 +23,5 @@ mongoose.connect(mongoUrl)
 });
 
 
-app.use("/api/user",UserRouter);
+app.use('/api/user',UserRouter);
+app.use('/api/auth', authRouter);
