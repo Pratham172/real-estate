@@ -22,6 +22,19 @@ mongoose.connect(mongoUrl)
     console.log(err);
 });
 
-
+// routing user
 app.use('/api/user',UserRouter);
+// routing for authentication
 app.use('/api/auth', authRouter);
+
+// middlewear
+app.use((err, req, res, next)=> {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal server Error';
+    return res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message
+    });
+});
+
