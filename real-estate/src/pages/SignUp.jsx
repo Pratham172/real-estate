@@ -44,7 +44,7 @@ export default function SignUp() {
         />
         <input
           required
-          type="text"
+          type="email"
           placeholder="Email"
           id="email"
           className="border shadow-md p-3  rounded-lg "
@@ -66,7 +66,7 @@ export default function SignUp() {
         </button>
       </form>
       <div className="flex  gap-2 mt-5">
-        <p>Have an account?</p>
+        <p>Have an account ?</p>
         <Link to={"/sign-in"}>
           <span className="text-blue-700 ">Sign In</span>
         </Link>
