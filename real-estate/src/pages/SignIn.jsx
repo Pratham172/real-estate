@@ -7,6 +7,7 @@ import {
   signInSuccess,
   singInFailure,
 } from "../redux/user/userSlice";
+import GgleAuth from "../components/GgleAuth";
 
 export default function SignIn() {
   const {loading, error} = useSelector((state)=> state.user);
@@ -61,6 +62,7 @@ export default function SignIn() {
         >
           {loading ? "Processing..." : "Sign in"}
         </button>
+        <GgleAuth/>
       </form>
       <div className="flex  gap-2 mt-5">
         <p>Dont have an account ?</p>

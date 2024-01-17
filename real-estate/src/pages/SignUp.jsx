@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
+import GgleAuth from "../components/GgleAuth";
 
 export default function SignUp() {
   const [error, setError] = useState(null);
@@ -64,6 +65,8 @@ export default function SignUp() {
         >
           {loading ? "Processing..." : "Sign Up"}
         </button>
+        <GgleAuth/>
+        
       </form>
       <div className="flex  gap-2 mt-5">
         <p>Have an account ?</p>
