@@ -14,12 +14,15 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import Axios from "axios";
 
 export default function Profile() {
-  const { currentUser, loading , error } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
@@ -61,21 +64,19 @@ export default function Profile() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
     setChangesMade(true);
-
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateUserStart());
-    Axios.post(`/api/user/update/${currentUser._id}`, formData)
+    await Axios.post(`/api/user/update/${currentUser._id}`, formData)
       .then((res) => {
         dispatch(updateUserSuccess(res.data));
         if (!changesMade) {
-            alert("No changes are made");
-          } else {
-            alert("Update Successful");
-          }
-        
+          alert("No changes are made");
+        } else {
+          alert("Update Successful");
+        }
       })
       .catch((error) => {
         dispatch(updateUserFailure(error.response.data.message));
@@ -84,15 +85,25 @@ export default function Profile() {
 
   const handleDeleteAccount = async () => {
     dispatch(deleteUserStart());
-    Axios.delete(`/api/user/delete/${currentUser._id}`)
-    .then((res) => {
+    await Axios.delete(`/api/user/delete/${currentUser._id}`)
+      .then((res) => {
         dispatch(deleteUserSuccess());
-    })
-    .catch((error)=> {
+      })
+      .catch((error) => {
         dispatch(deleteUserFailure(error.response.data.message));
-    })
+      });
   };
 
+  const handleSignOut = async () => {
+    dispatch(signOutUserStart());
+    await Axios.get("/api/auth/sign-out")
+      .then((res) => {
+        dispatch(signOutUserSuccess());
+      })
+      .catch((error) => {
+        dispatch(signOutUserFailure(error.response.data.message));
+      });
+  };
   return (
     <div>
       <div className="p-3 max-w-lg mx-auto">
@@ -151,17 +162,26 @@ export default function Profile() {
              rounded-lg shadow-md"
             onChange={handleChange}
           />
-          <button disabled={loading} className="bg-[#00ABE4] text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
-          {loading ? "Processing..." : "update"}
+          <button
+            disabled={loading}
+            className="bg-[#00ABE4] text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
+          >
+            {loading ? "Processing..." : "update"}
           </button>
         </form>
 
         <form>
           <div className="flex justify-between mt-5">
-            <span onClick={handleDeleteAccount} className="text-red-500 font-bold cursor-pointer">
+            <span
+              onClick={handleDeleteAccount}
+              className="text-red-500 font-bold cursor-pointer"
+            >
               Delete Account
             </span>
-            <span className="text-red-500 font-bold cursor-pointer">
+            <span
+              onClick={handleSignOut}
+              className="text-red-500 font-bold cursor-pointer"
+            >
               Sign Out
             </span>
           </div>
