@@ -3,7 +3,6 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { errorHandler } from '../utils/custom.error.js';
 import dotenv from "dotenv";
-import { response } from "express";
 dotenv.config();
 
 export const signup = async (req, res, next) => {
