@@ -7,17 +7,23 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import Axios from "axios";
+
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading , error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  console.log(formData)
-
-  // firebase storage
-  
+  const dispatch = useDispatch();
+  const [changesMade, setChangesMade] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -48,11 +54,36 @@ export default function Profile() {
       }
     );
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setChangesMade(true);
+
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateUserStart());
+    Axios.post(`/api/user/update/${currentUser._id}`, formData)
+      .then((res) => {
+        dispatch(updateUserSuccess(res.data));
+        if (!changesMade) {
+            alert("No changes are made");
+          } else {
+            alert("Update Successful");
+          }
+        
+      })
+      .catch((error) => {
+        dispatch(updateUserFailure(error.response.data.message));
+      });
+  };
+
   return (
     <div>
       <div className="p-3 max-w-lg mx-auto">
         <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             onChange={(e) => setFile(e.target.files[0])}
             type="file"
@@ -85,14 +116,18 @@ export default function Profile() {
           <input
             type="text"
             placeholder="Username"
+            defaultValue={currentUser.username}
             id="username"
             className="border p-3 rounded-lg shadow-md"
+            onChange={handleChange}
           />
           <input
             type="email"
             placeholder="Email"
+            defaultValue={currentUser.email}
             id="email"
             className="border p-3 rounded-lg shadow-md"
+            onChange={handleChange}
           />
           <input
             type="password"
@@ -100,9 +135,10 @@ export default function Profile() {
             id="password"
             className="border p-3
              rounded-lg shadow-md"
+            onChange={handleChange}
           />
-          <button className="bg-[#00ABE4] text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
-            update
+          <button disabled={loading} className="bg-[#00ABE4] text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
+          {loading ? "Processing..." : "update"}
           </button>
         </form>
 
@@ -115,6 +151,7 @@ export default function Profile() {
               Sign Out
             </span>
           </div>
+          <p className="text-red-700">{error ? error : " "}</p>
         </form>
       </div>
     </div>
