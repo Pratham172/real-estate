@@ -11,6 +11,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import Axios from "axios";
@@ -79,6 +82,17 @@ export default function Profile() {
       });
   };
 
+  const handleDeleteAccount = async () => {
+    dispatch(deleteUserStart());
+    Axios.delete(`/api/user/delete/${currentUser._id}`)
+    .then((res) => {
+        dispatch(deleteUserSuccess());
+    })
+    .catch((error)=> {
+        dispatch(deleteUserFailure(error.response.data.message));
+    })
+  };
+
   return (
     <div>
       <div className="p-3 max-w-lg mx-auto">
@@ -144,7 +158,7 @@ export default function Profile() {
 
         <form>
           <div className="flex justify-between mt-5">
-            <span className="text-red-500 font-bold cursor-pointer">
+            <span onClick={handleDeleteAccount} className="text-red-500 font-bold cursor-pointer">
               Delete Account
             </span>
             <span className="text-red-500 font-bold cursor-pointer">
