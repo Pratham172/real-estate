@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import UserRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -29,6 +30,8 @@ mongoose.connect(mongoUrl)
 app.use('/api/user', UserRouter);
 // routing for authentication
 app.use('/api/auth', authRouter);
+// routing for property listing
+app.use('/api/listing', listingRouter);
 
 
 // middlewear to handle errors
