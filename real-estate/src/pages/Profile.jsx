@@ -229,8 +229,8 @@ export default function Profile() {
           </span>
         </div>
         <p className="text-red-700">{error ? error : " "}</p>
-        <button onClick={handleShowListings} className="text-green-700 w-full">
-          Show Listings
+        <button onClick={handleShowListings} className="text-blue-600 font-bold hover:underline w-full">
+        &darr; Show Listings &darr;
         </button>
         <p className="text-red-700 mt-5">
           {showListingsError ? "Error showing listings" : ""}
@@ -244,7 +244,7 @@ export default function Profile() {
             {userListings.map((listing) => (
               <div
                 key={listing._id}
-                className="border rounded-lg p-3 flex justify-between items-center gap-4"
+                className="border shadow-lg border-gray-400 rounded-lg p-3 flex justify-between items-center gap-4"
               >
                 <Link to={`/listing/${listing._id}`}>
                   <img
@@ -260,14 +260,16 @@ export default function Profile() {
                   <p>{listing.name}</p>
                 </Link>
 
-                <div className="flex flex-col item-center">
+                <div className="flex gap-20 item-center">
                   <button
                     onClick={() => handleListingDelete(listing._id)}
-                    className="text-red-700 uppercase"
+                    className="text-red-500 font-bold uppercase"
                   >
                     Delete
                   </button>
-                  <button className="text-green-700 uppercase">Edit</button>
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button className="text-green-700 font-bold uppercase">Edit</button>
+                  </Link>
                 </div>
               </div>
             ))}
